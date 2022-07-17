@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Irow, ITest } from "../interface";
 
 function Test({ wordList }: ITest) {
   const [testList, setTestList] = useState<Array<Irow>>([]);
+  const [loading, setLoading] = useState(true);
+  const [textInput, setTextInput] = useState<string>("");
+  const [index, setIndex] = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  const createTestList = () => {
+  useEffect(() => {
     var randomizedList: Array<Irow> = [];
     var list: Array<Irow> = wordList;
     var length = list.length;
@@ -15,23 +18,42 @@ function Test({ wordList }: ITest) {
       list.splice(randInt, 1);
       if (i == length - 1) {
         setTestList(randomizedList);
+        setLoading(false);
       }
+    }
+  }, []);
+
+  const onTextChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setTextInput(event.currentTarget.value);
+  };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(
+      testList[index].meaning.find((element) => element == textInput)
+    );
+    if (index < testList.length - 1) {
+      setIndex((current) => current + 1);
+      setTextInput("");
+    } else {
+      setFinished(true);
     }
   };
 
-  useEffect(() => {
-    createTestList();
-  }, []);
-
   return (
     <>
-      <div>
-        <h1>Hello</h1>
-        <form>
-          <input type="text" />
-          <input type="submit" />
-        </form>
-      </div>
+      {loading ? (
+        "loading"
+      ) : finished ? (
+        "finished"
+      ) : (
+        <div>
+          <h1>{testList[index].word}</h1>
+          <form onSubmit={onSubmit}>
+            <input type="text" onChange={onTextChange} value={textInput} />
+            <input type="submit" />
+          </form>
+        </div>
+      )}
     </>
   );
 }

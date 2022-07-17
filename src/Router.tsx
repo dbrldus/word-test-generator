@@ -9,7 +9,16 @@ function Router({ wordList, setWordList }: IRouter) {
       <Routes>
         <Route path="/" element={<Navigate to="/word" />} />
         <Route path="/word" element={<Word setWordList={setWordList} />} />
-        <Route path="/test" element={<Test wordList={wordList} />} />
+        <Route
+          path="/test"
+          element={
+            wordList.length == 0 ? (
+              <Navigate to="/word"></Navigate>
+            ) : (
+              <Test wordList={wordList} />
+            )
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
