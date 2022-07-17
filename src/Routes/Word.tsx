@@ -1,11 +1,10 @@
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
+import { Irow, IWord } from "../interface";
 
-interface Irow {
-  word: string;
-  meaning: Array<string>;
-}
-
-function Word() {
+function Word({ setWordList }: IWord) {
+  const [finished, setFinished] = useState(false);
   const onFileInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let files = event.target.files;
     if (files != null) {
@@ -17,15 +16,22 @@ function Word() {
           meaning: row[1].toString().split(","),
         });
       });
-      console.log(wordList);
+      setWordList(wordList);
+      setFinished(true);
     }
   };
   return (
-    <input
-      type="file"
-      onChange={onFileInput}
-      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    />
+    <>
+      {finished ? (
+        <Navigate to="/test" />
+      ) : (
+        <input
+          type="file"
+          onChange={onFileInput}
+          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        />
+      )}
+    </>
   );
 }
 
