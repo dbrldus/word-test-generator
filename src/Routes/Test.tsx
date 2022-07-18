@@ -1,6 +1,7 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { IResultData, IResults, Irow, ITest } from "../interface";
 
 const Wrapper = styled.div`
@@ -89,8 +90,9 @@ const HomeButton = styled.div`
   align-items: center;
   background-color: #fff;
   border-radius: 10px;
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
+  font-size: 30px;
   a {
     color: #000;
     text-decoration: none;
@@ -171,6 +173,9 @@ function Test({ wordList }: ITest) {
         <Results resultData={resultData}></Results>
       ) : (
         <>
+          <Helmet>
+            <title>📝 Word Test</title>
+          </Helmet>
           <ProgressBG></ProgressBG>
           <Progress total={totalWord} current={totalWord - testList.length}>
             <div>{totalWord - testList.length}</div>
@@ -198,20 +203,20 @@ function Test({ wordList }: ITest) {
 }
 
 const Title = styled.div`
-  font-size: 50px;
+  font-size: 100px;
 `;
 
 const AnswerStatus = styled.div`
-  font-size: 30px;
+  font-size: 50px;
 `;
 
 const DetailsBtn = styled.button`
   font-family: "Do Hyeon", sans-serif;
-  font-size: 16px;
+  font-size: 32px;
   background-color: #fff;
   border: none;
-  width: 100px;
-  height: 35px;
+  width: 200px;
+  height: 70px;
   border-radius: 30px;
   transition: background-color 0.2s linear;
   &:hover {
@@ -219,9 +224,11 @@ const DetailsBtn = styled.button`
   }
 `;
 const TableWrapper = styled.div<{ showDetails: boolean }>`
+  width: 600px;
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: thin;
-  height: ${(p) => (p.showDetails ? "300px" : "0px")};
+  height: ${(p) => (p.showDetails ? "500px" : "0px")};
   transition: height 1s ease-in-out;
 
   ::-webkit-scrollbar {
@@ -245,9 +252,12 @@ const TableWrapper = styled.div<{ showDetails: boolean }>`
 `;
 
 const WrongTable = styled.table<{ showDetails: boolean }>`
-  width: 400px;
+  width: inherit;
+  overflow-x: hidden;
+  margin: 0px;
   opacity: ${(p) => (p.showDetails ? 1 : 0)};
   transition: opacity 1s ease-in-out;
+  font-size: 30px;
   th {
     border-bottom: 2px solid black;
     padding: 5px;
@@ -266,6 +276,9 @@ function Results({ resultData }: IResults) {
   };
   return (
     <>
+      <Helmet>
+        <title>💯 Test Result</title>
+      </Helmet>
       <Wrapper>
         <Title>Finished</Title>
         <AnswerStatus>
@@ -281,8 +294,8 @@ function Results({ resultData }: IResults) {
               <th>Your Answer</th>
               <th>Correct Answer</th>
             </tr>
-            {resultData.wrongAnswers.map((value) => (
-              <tr>
+            {resultData.wrongAnswers.map((value, index) => (
+              <tr key={index}>
                 <td>{value.word}</td>
                 <td>{value.answerInput}</td>
                 <td>{value.correctAnswer}</td>

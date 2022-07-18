@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
 import styled from "styled-components";
@@ -19,7 +20,7 @@ const Wrapper = styled.form`
 const DragField = styled.label<{ bgColor: string }>`
   width: 70vw;
   height: 70vh;
-  font-size: 30px;
+  font-size: 50px;
   border-radius: 50px;
   border: 10px dashed black;
   display: grid;
@@ -74,32 +75,37 @@ function Word({ setWordList }: IWord) {
       {finished ? (
         <Navigate to="/test" />
       ) : (
-        <Wrapper
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <input
-            type="file"
-            id="fileUpload"
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            onChange={onChange}
-          />
-          <DragField
-            htmlFor="fileUpload"
-            bgColor={dragActive ? "#CCF1FF" : "#fff"}
+        <>
+          <Helmet>
+            <title>📁 Upload File</title>
+          </Helmet>
+          <Wrapper
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onSubmit={(e) => e.preventDefault()}
           >
-            <div />
-            <div>
-              <p>Drag file Here</p>
-              <p>or</p>
-              <p>Click to upload file</p>
-            </div>
-            <div />
-          </DragField>
-        </Wrapper>
+            <input
+              type="file"
+              id="fileUpload"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              onChange={onChange}
+            />
+            <DragField
+              htmlFor="fileUpload"
+              bgColor={dragActive ? "#CCF1FF" : "#fff"}
+            >
+              <div />
+              <div>
+                <p>Drag file Here</p>
+                <p>or</p>
+                <p>Click to upload file</p>
+              </div>
+              <div />
+            </DragField>
+          </Wrapper>
+        </>
       )}
     </>
   );

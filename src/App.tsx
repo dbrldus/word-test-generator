@@ -6,7 +6,6 @@ import { Helmet } from "react-helmet-async";
 
 function App() {
   const [wordList, setWordList] = useState<Array<Irow>>([]);
-  console.log(wordList);
   return (
     <>
       <Helmet>
