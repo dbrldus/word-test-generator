@@ -25,7 +25,7 @@ const DragField = styled.label<{ bgColor: string }>`
   display: grid;
   grid-template-rows: 1fr auto 1fr;
   background-color: ${(props) => props.bgColor};
-  transition: background-color 1s linear;
+  transition: background-color 0.1s linear;
   p {
     margin: 0px;
   }
@@ -89,11 +89,12 @@ function Word({ setWordList }: IWord) {
           />
           <DragField
             htmlFor="fileUpload"
-            bgColor={dragActive ? "#34e7e4" : "#fff"}
+            bgColor={dragActive ? "#CCF1FF" : "#fff"}
           >
             <div />
             <div>
-              <p>Drag file Here or</p>
+              <p>Drag file Here</p>
+              <p>or</p>
               <p>Click to upload file</p>
             </div>
             <div />
