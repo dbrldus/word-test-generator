@@ -1,4 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { IResultData, IResults, Irow, ITest } from "../interface";
 
@@ -75,6 +76,30 @@ const ProgressBG = styled.div`
   height: 25px;
   background-color: #5c646e;
   transition: width 0.2s linear;
+`;
+
+const HomeButton = styled.div`
+  font-family: "Do Hyeon", sans-serif;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: #7fddff;
+  }
+  transition: background-color 0.3s linear;
 `;
 
 function Test({ wordList }: ITest) {
@@ -163,12 +188,36 @@ function Test({ wordList }: ITest) {
               <SubmitBtn />
             </form>
           </Wrapper>
+          <HomeButton>
+            <Link to="/">Home</Link>
+          </HomeButton>
         </>
       )}
     </>
   );
 }
 
+const Title = styled.div`
+  font-size: 50px;
+`;
+
+const AnswerStatus = styled.div`
+  font-size: 30px;
+`;
+
+const DetailsBtn = styled.button`
+  font-family: "Do Hyeon", sans-serif;
+  font-size: 16px;
+  background-color: #fff;
+  border: none;
+  width: 100px;
+  height: 35px;
+  border-radius: 30px;
+  transition: background-color 0.2s linear;
+  &:hover {
+    background-color: #7fddff;
+  }
+`;
 const TableWrapper = styled.div<{ showDetails: boolean }>`
   overflow-y: scroll;
   scrollbar-width: thin;
@@ -197,6 +246,8 @@ const TableWrapper = styled.div<{ showDetails: boolean }>`
 
 const WrongTable = styled.table<{ showDetails: boolean }>`
   width: 400px;
+  opacity: ${(p) => (p.showDetails ? 1 : 0)};
+  transition: opacity 1s ease-in-out;
   th {
     border-bottom: 2px solid black;
     padding: 5px;
@@ -214,29 +265,36 @@ function Results({ resultData }: IResults) {
     setShowDetails((c) => !c);
   };
   return (
-    <Wrapper>
-      <div>Finished</div>
-      <div>
-        Correct : {resultData.correctCount} Wrong : {resultData.wrongCount}
-      </div>
-      <button onClick={onButtonClick}>Show Details</button>
-      <TableWrapper showDetails={showDetails}>
-        <WrongTable showDetails={showDetails}>
-          <tr>
-            <th>Word</th>
-            <th>Your Answer</th>
-            <th>Correct Answer</th>
-          </tr>
-          {resultData.wrongAnswers.map((value) => (
+    <>
+      <Wrapper>
+        <Title>Finished</Title>
+        <AnswerStatus>
+          Correct : {resultData.correctCount} Wrong : {resultData.wrongCount}
+        </AnswerStatus>
+        <DetailsBtn onClick={onButtonClick}>
+          {showDetails ? "Hide Details" : "Show Details"}
+        </DetailsBtn>
+        <TableWrapper showDetails={showDetails}>
+          <WrongTable showDetails={showDetails}>
             <tr>
-              <td>{value.word}</td>
-              <td>{value.answerInput}</td>
-              <td>{value.correctAnswer}</td>
+              <th>Word</th>
+              <th>Your Answer</th>
+              <th>Correct Answer</th>
             </tr>
-          ))}
-        </WrongTable>
-      </TableWrapper>
-    </Wrapper>
+            {resultData.wrongAnswers.map((value) => (
+              <tr>
+                <td>{value.word}</td>
+                <td>{value.answerInput}</td>
+                <td>{value.correctAnswer}</td>
+              </tr>
+            ))}
+          </WrongTable>
+        </TableWrapper>
+      </Wrapper>
+      <HomeButton>
+        <Link to="/">Home</Link>
+      </HomeButton>
+    </>
   );
 }
 export default Test;
