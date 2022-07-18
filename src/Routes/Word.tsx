@@ -1,12 +1,39 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
+import styled from "styled-components";
 import { Irow, IWord } from "../interface";
 
+const Wrapper = styled.form`
+  font-family: "Do Hyeon", sans-serif;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  input {
+    display: none;
+  }
+`;
+
+const DragField = styled.label<{ bgColor: string }>`
+  width: 70vw;
+  height: 70vh;
+  font-size: 30px;
+  border-radius: 50px;
+  border: 10px dashed black;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  background-color: ${(props) => props.bgColor};
+  transition: background-color 1s linear;
+  p {
+    margin: 0px;
+  }
+`;
 function Word({ setWordList }: IWord) {
   const [finished, setFinished] = useState(false);
-  const onFileInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    let files = event.target.files;
+  const [dragActive, setDragActive] = useState(false);
+  const onFileInput = async (files: any) => {
     if (files != null) {
       let content = await readXlsxFile(files[0]);
       let wordList: Array<Irow> = [];
@@ -20,16 +47,58 @@ function Word({ setWordList }: IWord) {
       setFinished(true);
     }
   };
+
+  const handleDrag = (e: React.DragEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type == "dragenter" || e.type == "dragover") {
+      setDragActive(true);
+    } else if (e.type == "dragleave") {
+      setDragActive(false);
+    }
+  };
+  const handleDrop = function (e: React.DragEvent<HTMLFormElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      onFileInput(e.dataTransfer.files);
+    }
+  };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    onFileInput(e.currentTarget.files);
+  };
   return (
     <>
       {finished ? (
         <Navigate to="/test" />
       ) : (
-        <input
-          type="file"
-          onChange={onFileInput}
-          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        />
+        <Wrapper
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <input
+            type="file"
+            id="fileUpload"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            onChange={onChange}
+          />
+          <DragField
+            htmlFor="fileUpload"
+            bgColor={dragActive ? "#34e7e4" : "#fff"}
+          >
+            <div />
+            <div>
+              <p>Drag file Here or</p>
+              <p>Click to upload file</p>
+            </div>
+            <div />
+          </DragField>
+        </Wrapper>
       )}
     </>
   );

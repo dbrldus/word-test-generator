@@ -1,58 +1,66 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import styled from "styled-components";
 import { Irow, ITest } from "../interface";
 
-function Test({ wordList }: ITest) {
-  const [testList, setTestList] = useState<Array<Irow>>([]);
-  const [loading, setLoading] = useState(true);
-  const [textInput, setTextInput] = useState<string>("");
-  const [index, setIndex] = useState(0);
-  const [finished, setFinished] = useState(false);
+const Wrapper = styled.div`
+  font-family: "Do Hyeon", sans-serif;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+`;
 
-  useEffect(() => {
-    var randomizedList: Array<Irow> = [];
-    var list: Array<Irow> = wordList;
-    var length = list.length;
-    for (var i = 0; i < length; i++) {
-      var randInt = Math.floor(Math.random() * list.length);
-      randomizedList[i] = list[randInt];
-      list.splice(randInt, 1);
-      if (i == length - 1) {
-        setTestList(randomizedList);
-        setLoading(false);
-      }
-    }
-  }, []);
+function Test({ wordList }: ITest) {
+  const [testList, setTestList] = useState<Array<Irow>>(wordList);
+  const [textInput, setTextInput] = useState<string>("");
+  const [index, setIndex] = useState(
+    Math.floor(Math.random() * wordList.length)
+  );
+  const [finished, setFinished] = useState(false);
 
   const onTextChange = (event: React.FormEvent<HTMLInputElement>) => {
     setTextInput(event.currentTarget.value);
   };
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(
-      testList[index].meaning.find((element) => element == textInput)
-    );
-    if (index < testList.length - 1) {
-      setIndex((current) => current + 1);
+    checkAnswer();
+    getNextWord();
+  };
+
+  const checkAnswer = () => {
+    var check = testList[index].meaning.find((element) => element == textInput);
+    if (check == undefined) {
+      console.log("wrong");
+    } else {
+      console.log("correct");
+    }
+  };
+
+  const getNextWord = () => {
+    var newList = testList;
+    newList.splice(index, 1);
+    setTestList(newList);
+
+    if (testList.length != 0) {
+      setIndex(Math.floor(Math.random() * testList.length));
       setTextInput("");
     } else {
       setFinished(true);
     }
   };
-
   return (
     <>
-      {loading ? (
-        "loading"
-      ) : finished ? (
+      {finished ? (
         "finished"
       ) : (
-        <div>
+        <Wrapper>
           <h1>{testList[index].word}</h1>
           <form onSubmit={onSubmit}>
             <input type="text" onChange={onTextChange} value={textInput} />
             <input type="submit" />
           </form>
-        </div>
+        </Wrapper>
       )}
     </>
   );
