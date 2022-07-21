@@ -20,7 +20,7 @@ const Word = styled.div`
 
 const AnswerInput = styled.input.attrs({ type: "text" })`
   font-size: 40px;
-  font-family: "Do Hyeon", sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   text-align: center;
   border: none;
   border-bottom: 2px solid black;

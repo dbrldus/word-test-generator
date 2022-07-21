@@ -25,5 +25,17 @@
     "@vitejs/plugin-react": "^2.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
-  }
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbrldus/word-test-generator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dbrldus/word-test-generator/issues"
+  },
+  "homepage": "https://github.com/dbrldus/word-test-generator#readme",
+  "description": ""
 }

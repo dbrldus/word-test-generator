@@ -41,7 +41,10 @@ function Word({ setWordList }: IWord) {
       content.forEach((row) => {
         wordList.push({
           word: row[0].toString(),
-          meaning: row[1].toString().split(","),
+          meaning: row[1]
+            .toString()
+            .split(",")
+            .map((value) => value.trim()),
         });
       });
       setWordList(wordList);
