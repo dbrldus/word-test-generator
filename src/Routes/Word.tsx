@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
 import styled from "styled-components";
-import { Irow, IWord } from "../interface";
+import { DataContext } from "../Data";
+import { Irow } from "../interface";
 
 const Wrapper = styled.form`
   font-family: "Do Hyeon", sans-serif;
@@ -31,15 +32,15 @@ const DragField = styled.label<{ bgColor: string }>`
     margin: 0px;
   }
 `;
-function Word({ setWordList }: IWord) {
-  const [finished, setFinished] = useState(false);
+function Word() {
+  const { wordList, setWordList, setResultData } = useContext(DataContext);
   const [dragActive, setDragActive] = useState(false);
   const onFileInput = async (files: any) => {
     if (files != null) {
       let content = await readXlsxFile(files[0]);
-      let wordList: Array<Irow> = [];
+      let list: Array<Irow> = [];
       content.forEach((row) => {
-        wordList.push({
+        list.push({
           word: row[0].toString(),
           meaning: row[1]
             .toString()
@@ -47,11 +48,14 @@ function Word({ setWordList }: IWord) {
             .map((value) => value.trim()),
         });
       });
-      setWordList(wordList);
-      setFinished(true);
+      setWordList(list);
+      setResultData({
+        correctCount: 0,
+        wrongCount: 0,
+        wrongAnswers: [],
+      });
     }
   };
-
   const handleDrag = (e: React.DragEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -75,7 +79,7 @@ function Word({ setWordList }: IWord) {
   };
   return (
     <>
-      {finished ? (
+      {wordList.length !== 0 ? (
         <Navigate to="/test" />
       ) : (
         <>

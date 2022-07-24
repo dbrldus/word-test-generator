@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import styled from "styled-components";
-import { IResultData, IResults, Irow, ITest } from "../interface";
+import { DataContext } from "../Data";
+import { IResultData, Irow } from "../interface";
 
 const Wrapper = styled.div`
   font-family: "Do Hyeon", sans-serif;
@@ -104,7 +105,9 @@ const HomeButton = styled.div`
   transition: background-color 0.3s linear;
 `;
 
-function Test({ wordList }: ITest) {
+function Test() {
+  const { wordList, resultData, setResultData } = useContext(DataContext);
+
   const [testList, setTestList] = useState<Array<Irow>>(wordList);
   const [totalWord, setTotalWord] = useState(wordList.length);
   const [textInput, setTextInput] = useState<string>("");
@@ -112,11 +115,6 @@ function Test({ wordList }: ITest) {
     Math.floor(Math.random() * wordList.length)
   );
   const [finished, setFinished] = useState(false);
-  const [resultData, setResultData] = useState<IResultData>({
-    correctCount: 0,
-    wrongCount: 0,
-    wrongAnswers: [],
-  });
 
   const onTextChange = (event: React.FormEvent<HTMLInputElement>) => {
     setTextInput(event.currentTarget.value);
@@ -167,10 +165,11 @@ function Test({ wordList }: ITest) {
       setFinished(true);
     }
   };
+  console.log(wordList);
   return (
     <>
       {finished ? (
-        <Results resultData={resultData}></Results>
+        <Navigate to="/result"></Navigate>
       ) : (
         <>
           <Helmet>
@@ -202,112 +201,4 @@ function Test({ wordList }: ITest) {
   );
 }
 
-const Title = styled.div`
-  font-size: 100px;
-`;
-
-const AnswerStatus = styled.div`
-  font-size: 50px;
-`;
-
-const DetailsBtn = styled.button`
-  font-family: "Do Hyeon", sans-serif;
-  font-size: 32px;
-  background-color: #fff;
-  border: none;
-  width: 200px;
-  height: 70px;
-  border-radius: 30px;
-  transition: background-color 0.2s linear;
-  &:hover {
-    background-color: #7fddff;
-  }
-`;
-const TableWrapper = styled.div<{ showDetails: boolean }>`
-  width: 600px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  height: ${(p) => (p.showDetails ? "500px" : "0px")};
-  transition: height 1s ease-in-out;
-
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-`;
-
-const WrongTable = styled.table<{ showDetails: boolean }>`
-  width: inherit;
-  overflow-x: hidden;
-  margin: 0px;
-  opacity: ${(p) => (p.showDetails ? 1 : 0)};
-  transition: opacity 1s ease-in-out;
-  font-size: 30px;
-  th {
-    border-bottom: 2px solid black;
-    padding: 5px;
-  }
-  td {
-    border-bottom: 2px solid black;
-    padding: 5px;
-  }
-`;
-
-function Results({ resultData }: IResults) {
-  const [showDetails, setShowDetails] = useState(false);
-
-  const onButtonClick = () => {
-    setShowDetails((c) => !c);
-  };
-  return (
-    <>
-      <Helmet>
-        <title>💯 Test Result</title>
-      </Helmet>
-      <Wrapper>
-        <Title>Finished</Title>
-        <AnswerStatus>
-          Correct : {resultData.correctCount} Wrong : {resultData.wrongCount}
-        </AnswerStatus>
-        <DetailsBtn onClick={onButtonClick}>
-          {showDetails ? "Hide Details" : "Show Details"}
-        </DetailsBtn>
-        <TableWrapper showDetails={showDetails}>
-          <WrongTable showDetails={showDetails}>
-            <tr>
-              <th>Word</th>
-              <th>Your Answer</th>
-              <th>Correct Answer</th>
-            </tr>
-            {resultData.wrongAnswers.map((value, index) => (
-              <tr key={index}>
-                <td>{value.word}</td>
-                <td>{value.answerInput}</td>
-                <td>{value.correctAnswer}</td>
-              </tr>
-            ))}
-          </WrongTable>
-        </TableWrapper>
-      </Wrapper>
-      <HomeButton>
-        <Link to="/">Home</Link>
-      </HomeButton>
-    </>
-  );
-}
 export default Test;
