@@ -1,24 +1,22 @@
 import { createContext, useContext, useState } from "react";
-import { Icontext, IResultData, Irow } from "./interface";
+import { Icontext, Irow, IwrongAnswer } from "./interface";
 
 export const DataContext = createContext<Icontext>({
   wordList: [],
   setWordList: () => {},
-  resultData: {
-    correctCount: 0,
-    wrongCount: 0,
-    wrongAnswers: [],
-  },
+  resultData: [],
   setResultData: () => {},
+  resetData: () => {},
 });
 
 function WordStore(props: any) {
   const [wordList, setWordList] = useState<Array<Irow>>([]);
-  const [resultData, setResultData] = useState<IResultData>({
-    correctCount: 0,
-    wrongCount: 0,
-    wrongAnswers: [],
-  });
+  const [resultData, setResultData] = useState<Array<IwrongAnswer>>([]);
+
+  const resetData = () => {
+    setWordList([]);
+    setResultData([]);
+  };
 
   return (
     <DataContext.Provider
@@ -27,6 +25,7 @@ function WordStore(props: any) {
         setWordList,
         resultData,
         setResultData,
+        resetData,
       }}
     >
       {props.children}

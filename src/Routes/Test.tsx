@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
 import styled from "styled-components";
 import { DataContext } from "../Data";
-import { IResultData, Irow } from "../interface";
+import { Irow } from "../interface";
 
 const Wrapper = styled.div`
   font-family: "Do Hyeon", sans-serif;
@@ -108,7 +108,7 @@ const HomeButton = styled.div`
 function Test() {
   const { wordList, resultData, setResultData } = useContext(DataContext);
 
-  const [testList, setTestList] = useState<Array<Irow>>(wordList);
+  const [testList, setTestList] = useState<Array<Irow>>([...wordList]);
   const [totalWord, setTotalWord] = useState(wordList.length);
   const [textInput, setTextInput] = useState<string>("");
   const [index, setIndex] = useState(
@@ -129,34 +129,16 @@ function Test() {
     var check = testList[index].meaning.find((element) => element == textInput);
     if (check == undefined) {
       console.log("wrong");
-      var { wrongCount: wc, correctCount: cc, wrongAnswers: wa } = resultData;
-      wc += 1;
-      wa.push({
-        word: testList[index].word,
+      var current = resultData;
+      current.push({
+        id: testList[index].id,
         answerInput: textInput,
-        correctAnswer: testList[index].meaning.join(),
       });
-      setResultData({
-        wrongCount: wc,
-        correctCount: cc,
-        wrongAnswers: wa,
-      });
-    } else {
-      console.log("correct");
-      var { wrongCount: wc, correctCount: cc, wrongAnswers: wa } = resultData;
-      cc += 1;
-      setResultData({
-        wrongCount: wc,
-        correctCount: cc,
-        wrongAnswers: wa,
-      });
+      setResultData(current);
     }
   };
-
   const getNextWord = () => {
-    var newList = testList;
-    newList.splice(index, 1);
-    setTestList(newList);
+    testList.splice(index, 1);
 
     if (testList.length != 0) {
       setIndex(Math.floor(Math.random() * testList.length));
@@ -165,11 +147,10 @@ function Test() {
       setFinished(true);
     }
   };
-  console.log(wordList);
   return (
     <>
       {finished ? (
-        <Navigate to="/result"></Navigate>
+        <Navigate to="/test/result"></Navigate>
       ) : (
         <>
           <Helmet>
@@ -193,7 +174,9 @@ function Test() {
             </form>
           </Wrapper>
           <HomeButton>
-            <Link to="/">Home</Link>
+            <Link to="/" reloadDocument>
+              Home
+            </Link>
           </HomeButton>
         </>
       )}

@@ -106,7 +106,10 @@ const HomeButton = styled.div`
 `;
 
 function Results() {
-  const { resultData } = useContext(DataContext);
+  const { wordList, resultData } = useContext(DataContext);
+
+  let correctCount = wordList.length - resultData.length;
+  let wrongCount = resultData.length;
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -121,7 +124,7 @@ function Results() {
       <Wrapper>
         <Title>Finished</Title>
         <AnswerStatus>
-          Correct : {resultData.correctCount} Wrong : {resultData.wrongCount}
+          Correct : {correctCount} Wrong : {wrongCount}
         </AnswerStatus>
         <DetailsBtn onClick={onButtonClick}>
           {showDetails ? "Hide Details" : "Show Details"}
@@ -131,16 +134,16 @@ function Results() {
             <thead>
               <tr>
                 <th>Word</th>
-                <th>Your Answer</th>
                 <th>Correct Answer</th>
+                <th>Your Answer</th>
               </tr>
             </thead>
             <tbody>
-              {resultData.wrongAnswers.map((value, index) => (
+              {resultData.map((value, index) => (
                 <tr key={index}>
-                  <td>{value.word}</td>
+                  <td>{wordList[value.id].word}</td>
+                  <td>{wordList[value.id].meaning.join()}</td>
                   <td>{value.answerInput}</td>
-                  <td>{value.correctAnswer}</td>
                 </tr>
               ))}
             </tbody>

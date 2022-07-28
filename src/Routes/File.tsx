@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
@@ -32,15 +32,16 @@ const DragField = styled.label<{ bgColor: string }>`
     margin: 0px;
   }
 `;
-function Word() {
+function File() {
   const { wordList, setWordList, setResultData } = useContext(DataContext);
   const [dragActive, setDragActive] = useState(false);
   const onFileInput = async (files: any) => {
     if (files != null) {
       let content = await readXlsxFile(files[0]);
       let list: Array<Irow> = [];
-      content.forEach((row) => {
+      content.forEach((row, index) => {
         list.push({
+          id: index,
           word: row[0].toString(),
           meaning: row[1]
             .toString()
@@ -49,11 +50,6 @@ function Word() {
         });
       });
       setWordList(list);
-      setResultData({
-        correctCount: 0,
-        wrongCount: 0,
-        wrongAnswers: [],
-      });
     }
   };
   const handleDrag = (e: React.DragEvent<HTMLFormElement>) => {
@@ -77,10 +73,16 @@ function Word() {
     e.preventDefault();
     onFileInput(e.currentTarget.files);
   };
+
+  useEffect(() => {
+    setWordList([]);
+    setResultData([]);
+  }, []);
+
   return (
     <>
       {wordList.length !== 0 ? (
-        <Navigate to="/test" />
+        <Navigate to="/test/progress" />
       ) : (
         <>
           <Helmet>
@@ -118,4 +120,4 @@ function Word() {
   );
 }
 
-export default Word;
+export default File;

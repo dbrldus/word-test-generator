@@ -1,10 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
-import Word from "./Routes/Word";
-import Test from "./Routes/Test";
-import Results from "./Routes/Result";
 import WordStore, { DataContext } from "./Data";
 import { useContext } from "react";
+import Home from "./Routes/Home";
+import File from "./Routes/File";
+import Test from "./Routes/Test";
+import Results from "./Routes/Result";
 
 function App() {
   const ctx = useContext(DataContext);
@@ -21,9 +22,10 @@ function App() {
       <WordStore>
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Word />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="/result" element={<Results />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/test/file" element={<File />} />
+            <Route path="/test/progress" element={<Test />} />
+            <Route path="/test/result" element={<Results />} />
           </Routes>
         </HashRouter>
       </WordStore>
