@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import HomeButton from "../Components/HomeButton";
 import { DataContext } from "../Data";
 import { IResults } from "../interface";
 
@@ -80,31 +81,6 @@ const WrongTable = styled.table<{ showDetails: boolean }>`
   }
 `;
 
-const HomeButton = styled.div`
-  font-family: "Do Hyeon", sans-serif;
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 10px;
-  width: 100px;
-  height: 100px;
-  font-size: 30px;
-  a {
-    color: #000;
-    text-decoration: none;
-  }
-
-  &:hover {
-    background-color: #7fddff;
-  }
-  transition: background-color 0.3s linear;
-`;
-
 function Results() {
   const { wordList, resultData } = useContext(DataContext);
 
@@ -150,9 +126,7 @@ function Results() {
           </WrongTable>
         </TableWrapper>
       </Wrapper>
-      <HomeButton>
-        <Link to="/">Home</Link>
-      </HomeButton>
+      <HomeButton />
     </>
   );
 }

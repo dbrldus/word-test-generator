@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
 import styled from "styled-components";
+import HomeButton from "../Components/HomeButton";
 import { DataContext } from "../Data";
 import { Irow } from "../interface";
 
@@ -80,31 +81,6 @@ const ProgressBG = styled.div`
   transition: width 0.2s linear;
 `;
 
-const HomeButton = styled.div`
-  font-family: "Do Hyeon", sans-serif;
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 10px;
-  width: 100px;
-  height: 100px;
-  font-size: 30px;
-  a {
-    color: #000;
-    text-decoration: none;
-  }
-
-  &:hover {
-    background-color: #7fddff;
-  }
-  transition: background-color 0.3s linear;
-`;
-
 function Test() {
   const { wordList, resultData, setResultData } = useContext(DataContext);
 
@@ -173,11 +149,7 @@ function Test() {
               <SubmitBtn />
             </form>
           </Wrapper>
-          <HomeButton>
-            <Link to="/" reloadDocument>
-              Home
-            </Link>
-          </HomeButton>
+          <HomeButton />
         </>
       )}
     </>
