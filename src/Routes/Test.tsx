@@ -97,13 +97,32 @@ function Test() {
   };
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    checkAnswer();
+    updateResultData();
     getNextWord();
   };
 
   const checkAnswer = () => {
-    var check = testList[index].meaning.find((element) => element == textInput);
-    if (check == undefined) {
+    var ansInput = textInput.split(",").map((value) => value.trim());
+    var wrongList = ansInput.filter((answer) => {
+      var check = testList[index].meaning.find((element) => element == answer);
+      if (check == undefined) {
+        //not found
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    console.log(wrongList);
+    if (wrongList.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const updateResultData = () => {
+    if (checkAnswer() == false) {
       console.log("wrong");
       var current = resultData;
       current.push({
@@ -113,6 +132,7 @@ function Test() {
       setResultData(current);
     }
   };
+
   const getNextWord = () => {
     testList.splice(index, 1);
 
