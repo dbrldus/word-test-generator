@@ -42,6 +42,12 @@ export const DetailsBtn = styled(DefaultBtn)`
   width: 50px;
   height: 50px;
 `;
+
+export const RestartBtn = styled(DefaultBtn)`
+  font-size: 25px;
+  width: 150px;
+  height: 80px;
+`;
 ////////////////////////////////////////////////////////////////
 
 const DefaultTableWrapper = styled.div`
