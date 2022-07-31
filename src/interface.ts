@@ -1,6 +1,8 @@
 export interface Icontext {
   wordList: Array<Irow>;
   setWordList: Function;
+  testList: Array<number>;
+  setTestList: Function;
   resultData: Array<IwrongAnswer>;
   setResultData: Function;
   resetData: Function;

@@ -39,10 +39,9 @@ export const TestStartBtn = styled(DefaultBtn)`
 `;
 
 export const DetailsBtn = styled(DefaultBtn)`
-  width: 200px;
+  width: 50px;
   height: 50px;
 `;
-
 ////////////////////////////////////////////////////////////////
 
 const DefaultTableWrapper = styled.div`
@@ -88,15 +87,12 @@ export const WordTableWrapper = styled(DefaultTableWrapper)`
   height: 500px;
 `;
 
-export const ResultTable = styled(DefaultTable)<{ showDetails: boolean }>`
-  opacity: ${(p) => (p.showDetails ? 1 : 0)};
-  transition: opacity 1s ease-in-out;
-`;
+export const ResultTable = styled(DefaultTable)``;
 
 export const ResultTableWrapper = styled(DefaultTableWrapper)<{
-  showDetails: boolean;
+  show: boolean;
 }>`
   width: 600px;
-  height: ${(p) => (p.showDetails ? "500px" : "0px")};
-  transition: height 1s ease-in-out;
+  height: 500px;
+  display: ${(props) => (props.show ? "block" : "none")};
 `;

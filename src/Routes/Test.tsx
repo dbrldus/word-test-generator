@@ -82,13 +82,13 @@ const ProgressBG = styled.div`
 `;
 
 function Test() {
-  const { wordList, resultData, setResultData } = useContext(DataContext);
-
-  const [testList, setTestList] = useState<Array<Irow>>([...wordList]);
-  const [totalWord, setTotalWord] = useState(wordList.length);
+  const { wordList, testList, resultData, setResultData } =
+    useContext(DataContext);
+  const [selectedList, setSelectedList] = useState([...testList]);
+  const [totalWord, setTotalWord] = useState(testList.length);
   const [textInput, setTextInput] = useState<string>("");
   const [index, setIndex] = useState(
-    Math.floor(Math.random() * wordList.length)
+    Math.floor(Math.random() * testList.length)
   );
   const [finished, setFinished] = useState(false);
 
@@ -104,7 +104,9 @@ function Test() {
   const checkAnswer = () => {
     var ansInput = textInput.split(",").map((value) => value.trim());
     var wrongList = ansInput.filter((answer) => {
-      var check = testList[index].meaning.find((element) => element == answer);
+      var check = wordList[selectedList[index]].meaning.find(
+        (element) => element == answer
+      );
       if (check == undefined) {
         //not found
         return true;
@@ -113,7 +115,6 @@ function Test() {
       }
     });
 
-    console.log(wrongList);
     if (wrongList.length == 0) {
       return true;
     } else {
@@ -126,7 +127,7 @@ function Test() {
       console.log("wrong");
       var current = resultData;
       current.push({
-        id: testList[index].id,
+        id: wordList[selectedList[index]].id,
         answerInput: textInput,
       });
       setResultData(current);
@@ -134,10 +135,10 @@ function Test() {
   };
 
   const getNextWord = () => {
-    testList.splice(index, 1);
+    selectedList.splice(index, 1);
 
-    if (testList.length != 0) {
-      setIndex(Math.floor(Math.random() * testList.length));
+    if (selectedList.length != 0) {
+      setIndex(Math.floor(Math.random() * selectedList.length));
       setTextInput("");
     } else {
       setFinished(true);
@@ -153,12 +154,12 @@ function Test() {
             <title>📝 Word Test</title>
           </Helmet>
           <ProgressBG></ProgressBG>
-          <Progress total={totalWord} current={totalWord - testList.length}>
-            <div>{totalWord - testList.length}</div>
+          <Progress total={totalWord} current={totalWord - selectedList.length}>
+            <div>{totalWord - selectedList.length}</div>
           </Progress>
           <Wrapper>
-            {totalWord - testList.length} / {totalWord}
-            <Word>{testList[index].word}</Word>
+            {totalWord - selectedList.length} / {totalWord}
+            <Word>{wordList[selectedList[index]].word}</Word>
             <form onSubmit={onSubmit}>
               <AnswerInput
                 onChange={onTextChange}

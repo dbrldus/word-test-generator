@@ -4,11 +4,8 @@ import { DataContext } from "../Data";
 import { HomeBtn } from "./StyledCOMP";
 
 function HomeButton() {
-  const { resetData } = useContext(DataContext);
-
   const [pressed, setPressed] = useState(false);
   const onClick = () => {
-    resetData();
     setPressed(true);
   };
   return (

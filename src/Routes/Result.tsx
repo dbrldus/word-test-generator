@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useDebugValue, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import HomeButton from "../Components/HomeButton";
 import {
@@ -9,7 +8,6 @@ import {
   ResultTableWrapper,
 } from "../Components/StyledCOMP";
 import { DataContext } from "../Data";
-import { IResults } from "../interface";
 
 const Wrapper = styled.div`
   font-family: "Do Hyeon", sans-serif;
@@ -28,17 +26,31 @@ const AnswerStatus = styled.div`
   font-size: 50px;
 `;
 
+const DetailsControl = styled.div`
+  width: inherit;
+  font-size: 30px;
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
+`;
+
+const TableTitle = styled.div`
+  font-size: 30px;
+  text-align: center;
+`;
+
 function Results() {
-  const { wordList, resultData } = useContext(DataContext);
+  const { wordList, testList, resultData } = useContext(DataContext);
 
   let correctCount = wordList.length - resultData.length;
   let wrongCount = resultData.length;
-
-  const [showDetails, setShowDetails] = useState(false);
+  var wrongID = resultData.map((v) => v.id);
+  //console.log(resultData.map((value) => value.id));
+  const [showAll, setShowAll] = useState(false);
 
   const onButtonClick = () => {
-    setShowDetails((c) => !c);
+    setShowAll((c) => !c);
   };
+
   return (
     <>
       <Helmet>
@@ -49,29 +61,69 @@ function Results() {
         <AnswerStatus>
           Correct : {correctCount} Wrong : {wrongCount}
         </AnswerStatus>
-        <DetailsBtn onClick={onButtonClick}>
-          {showDetails ? "Hide Details" : "Show Details"}
-        </DetailsBtn>
-        <ResultTableWrapper showDetails={showDetails}>
-          <ResultTable showDetails={showDetails}>
-            <thead>
-              <tr>
-                <th>Word</th>
-                <th>Correct Answer</th>
-                <th>Your Answer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {resultData.map((value, index) => (
-                <tr key={index}>
-                  <td>{wordList[value.id].word}</td>
-                  <td>{wordList[value.id].meaning.join()}</td>
-                  <td>{value.answerInput}</td>
+        <DetailsControl>
+          <DetailsBtn onClick={onButtonClick}>&lt;</DetailsBtn>
+          <div />
+          <TableTitle>{showAll ? "All Words" : "Wrong Only"}</TableTitle>
+          <div />
+          <DetailsBtn onClick={onButtonClick}>&gt;</DetailsBtn>
+        </DetailsControl>
+        <div>
+          <ResultTableWrapper show={!showAll}>
+            <ResultTable>
+              <thead>
+                <tr>
+                  <th>Word</th>
+                  <th>Correct Answer</th>
+                  <th>Your Answer</th>
                 </tr>
-              ))}
-            </tbody>
-          </ResultTable>
-        </ResultTableWrapper>
+              </thead>
+              <tbody>
+                {resultData.map((value, index) => (
+                  <tr key={index}>
+                    <td>{wordList[value.id].word}</td>
+                    <td>{wordList[value.id].meaning.join()}</td>
+                    <td>{value.answerInput}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </ResultTable>
+          </ResultTableWrapper>
+
+          <ResultTableWrapper show={showAll}>
+            <ResultTable>
+              <thead>
+                <tr>
+                  <th>Word</th>
+                  <th>Correct Answer</th>
+                  <th>Your Answer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {testList.map((value, index) => {
+                  var searchResult = wrongID.indexOf(value);
+                  if (searchResult == -1) {
+                    return (
+                      <tr key={index}>
+                        <td>{wordList[value].word}</td>
+                        <td>{wordList[value].meaning.join()}</td>
+                        <td></td>
+                      </tr>
+                    );
+                  } else {
+                    return (
+                      <tr key={index}>
+                        <td>{wordList[value].word}</td>
+                        <td>{wordList[value].meaning.join()}</td>
+                        <td>{resultData[searchResult].answerInput}</td>
+                      </tr>
+                    );
+                  }
+                })}
+              </tbody>
+            </ResultTable>
+          </ResultTableWrapper>
+        </div>
       </Wrapper>
       <HomeButton />
     </>

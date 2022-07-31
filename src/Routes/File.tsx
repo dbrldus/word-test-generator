@@ -47,7 +47,8 @@ const BtnPanel = styled.div`
 `;
 
 function File() {
-  const { wordList, setWordList, resetData } = useContext(DataContext);
+  const { wordList, setWordList, setTestList, resetData } =
+    useContext(DataContext);
   const [dragActive, setDragActive] = useState(false);
   const [startPressed, setStartPressed] = useState(false);
 
@@ -95,6 +96,8 @@ function File() {
   };
 
   const onTestStartClicked = () => {
+    var test = wordList.map((value, index) => index);
+    setTestList(test);
     setStartPressed(true);
   };
 
@@ -109,7 +112,7 @@ function File() {
       ) : (
         <>
           <Helmet>
-            <title>📁 Upload File</title>
+            <title>Test Settings</title>
           </Helmet>
           <Wrapper
             onDragEnter={handleDrag}
