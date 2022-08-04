@@ -44,7 +44,6 @@ function Random({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
     settingUpdate();
   };
 
-  console.log(counter);
   const onReset = () => {
     setCounter(1);
   };

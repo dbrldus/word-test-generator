@@ -26,6 +26,9 @@ const TestBtn = styled.div`
   transition: background-color 0.3s linear;
 
   a {
+    display: block;
+    width: inherit;
+    height: inherit;
     color: black;
     text-decoration: none;
   }

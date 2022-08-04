@@ -123,7 +123,6 @@ function Test() {
 
   const updateResultData = () => {
     if (checkAnswer() == false) {
-      console.log("wrong");
       var current = resultData;
       current.push({
         id: wordList[selectedList[index]].id,
