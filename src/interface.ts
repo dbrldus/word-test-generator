@@ -28,3 +28,9 @@ export interface Ioptions {
   wordCount: number | null; //for random
   checkBoxValues: Array<boolean> | null; //for pick
 }
+
+export interface IOptionWindow {
+  settingUpdate: Function;
+  settingSubmit: (options: Ioptions) => void;
+  testOptions: Ioptions;
+}

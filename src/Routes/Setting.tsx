@@ -3,8 +3,11 @@ import { Helmet } from "react-helmet-async";
 import { Navigate } from "react-router-dom";
 import readXlsxFile from "read-excel-file";
 import styled from "styled-components";
-import File from "../Components/File";
-import Radio from "../Components/Radio";
+import Default from "../Components/SettingComponent/Default";
+import File from "../Components/SettingComponent/File";
+import Pick from "../Components/SettingComponent/Pick";
+import Radio from "../Components/SettingComponent/Radio";
+import Random from "../Components/SettingComponent/Random";
 import {
   ResetBtn,
   TestSettingBtn,
@@ -50,14 +53,6 @@ function TestSetting() {
   const { wordList, setWordList, setTestList, resetData } =
     useContext(DataContext);
   const [startPressed, setStartPressed] = useState(false);
-  const [settingOpened, setSettingOpened] = useState(false);
-  const [settingChanged, setSettingChanged] = useState(false);
-  const [radioIndex, setRadioIndex] = useState(0);
-  const [testOptions, setTestOptions] = useState<Ioptions>({
-    testMode: 0,
-    wordCount: null,
-    checkBoxValues: null,
-  });
 
   const onFileInput = async (files: any) => {
     if (files != null) {
@@ -77,67 +72,13 @@ function TestSetting() {
     }
   };
 
-  const onResetClicked = () => {
-    resetData();
-  };
-
-  const settingOpen = () => {
-    setSettingOpened((c) => !c);
-  };
-
-  const onTestStartClicked = () => {
-    if (testOptions.testMode == 0) {
-      DefaultTest();
-    } else if (testOptions.testMode == 1) {
-      RandomTest();
-    } else {
-      PickTest();
-    }
-  };
-
-  const DefaultTest = () => {
-    var test = wordList.map((value, index) => index);
+  const changeTestList = (test: any) => {
     setTestList(test);
+  };
+
+  const onStart = () => {
     setStartPressed(true);
   };
-
-  const RandomTest = () => {
-    var newTest = wordList.map((val, idx) => idx);
-    while (newTest.length != testOptions.wordCount) {
-      var randIdx = Math.floor(newTest.length * Math.random());
-      newTest.splice(randIdx, 1);
-    }
-    setTestList(newTest);
-    setStartPressed(true);
-  };
-
-  const PickTest = () => {
-    var list = testOptions.checkBoxValues ?? [];
-    var test: Array<number> = [];
-    list.forEach((val, idx) => {
-      if (val) {
-        test.push(idx);
-      }
-    });
-    setTestList(test);
-    setStartPressed(true);
-  };
-
-  const onWordOptionChange = (
-    event: React.SyntheticEvent<HTMLInputElement>
-  ) => {
-    setRadioIndex(Number(event.currentTarget.value));
-  };
-
-  const settingUpdate = () => {
-    setSettingChanged(true);
-  };
-
-  const settingSubmit = (options: Ioptions) => {
-    setTestOptions(options);
-    setSettingChanged(false);
-  };
-  console.log(testOptions);
 
   useEffect(() => {
     resetData();
@@ -177,39 +118,7 @@ function TestSetting() {
               WordList Length : {wordList.length != 0 ? wordList.length : ""}
             </div>
             {wordList.length != 0 ? (
-              <div>
-                <BtnPanel>
-                  <ResetBtn onClick={onResetClicked}>Reset</ResetBtn>
-                  <div />
-                  <TestSettingBtn onClick={settingOpen}>Setting</TestSettingBtn>
-                  <div />
-                  <TestStartBtn onClick={onTestStartClicked}>
-                    Start
-                  </TestStartBtn>
-                </BtnPanel>
-                <SettingPanel visible={settingOpened}>
-                  <div>Options{settingChanged ? "*" : ""}</div>
-                  <Radio
-                    wordOption={radioIndex}
-                    onWordOptionChange={onWordOptionChange}
-                  />
-                  {radioIndex == 0 ? (
-                    <Default settingSubmit={settingSubmit} />
-                  ) : radioIndex == 1 ? (
-                    <Random
-                      settingUpdate={settingUpdate}
-                      settingSubmit={settingSubmit}
-                      testOptions={testOptions}
-                    />
-                  ) : (
-                    <Pick
-                      settingUpdate={settingUpdate}
-                      settingSubmit={settingSubmit}
-                      testOptions={testOptions}
-                    />
-                  )}
-                </SettingPanel>
-              </div>
+              <ControlPanel changeTestList={changeTestList} onStart={onStart} />
             ) : (
               ""
             )}
@@ -220,152 +129,115 @@ function TestSetting() {
   );
 }
 
-interface IOptionDefault {
-  settingSubmit: (options: Ioptions) => void;
+interface IcontrolPanel {
+  changeTestList: Function;
+  onStart: Function;
 }
 
-function Default({ settingSubmit }: IOptionDefault) {
-  const onSubmit = () => {
-    settingSubmit({
-      testMode: 0,
-      wordCount: null,
-      checkBoxValues: null,
-    });
-  };
-  return (
-    <>
-      <button onClick={onSubmit}>Submit</button>
-    </>
-  );
-}
+function ControlPanel({ changeTestList, onStart }: IcontrolPanel) {
+  const { wordList, resetData } = useContext(DataContext);
+  const [settingOpened, setSettingOpened] = useState(false);
+  const [settingChanged, setSettingChanged] = useState(false);
+  const [radioIndex, setRadioIndex] = useState(0);
+  const [testOptions, setTestOptions] = useState<Ioptions>({
+    testMode: 0,
+    wordCount: null,
+    checkBoxValues: null,
+  });
 
-interface IOptionWindow {
-  settingUpdate: Function;
-  settingSubmit: (options: Ioptions) => void;
-  testOptions: Ioptions;
-}
-
-function Random({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
-  const [counter, setCounter] = useState<number>(1);
-  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setCounter(Number(event.currentTarget.value));
-    settingUpdate();
+  const onWordOptionChange = (
+    event: React.SyntheticEvent<HTMLInputElement>
+  ) => {
+    setRadioIndex(Number(event.currentTarget.value));
   };
 
-  const onReset = () => {
-    setCounter(1);
+  const settingUpdate = () => {
+    setSettingChanged(true);
   };
 
-  const onSubmit = () => {
-    settingSubmit({
-      testMode: 1,
-      wordCount: counter,
-      checkBoxValues: null,
-    });
+  const settingSubmit = (options: Ioptions) => {
+    setTestOptions(options);
+    setSettingChanged(false);
   };
 
-  useEffect(() => {
-    if (testOptions.wordCount == null) {
-      setCounter(1);
+  const onResetClicked = () => {
+    resetData();
+  };
+
+  const settingOpen = () => {
+    setSettingOpened((c) => !c);
+  };
+
+  const onTestStartClicked = () => {
+    if (testOptions.testMode == 0) {
+      DefaultTest();
+    } else if (testOptions.testMode == 1) {
+      RandomTest();
     } else {
-      setCounter(testOptions.wordCount);
+      PickTest();
     }
-  }, []);
-  return (
-    <>
-      <form onSubmit={(e) => e.preventDefault()}>
-        Word Count :
-        <input
-          type="number"
-          placeholder="Count"
-          value={counter == 0 ? "" : counter}
-          onChange={onChange}
-        ></input>
-        <button onClick={onReset}>Reset</button>
-        <button onClick={onSubmit}>Submit</button>
-      </form>
-    </>
-  );
-}
-
-const PickWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  height: 200px;
-  overflow-y: auto;
-  font-size: 20px;
-
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-`;
-
-function Pick({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
-  const { wordList } = useContext(DataContext);
-  const [checkedList, setCheckedList] = useState<Array<boolean>>([]);
-
-  useEffect(() => {
-    if (testOptions.checkBoxValues == null) {
-      setCheckedList(wordList.map(() => false));
-    } else {
-      setCheckedList(testOptions.checkBoxValues);
-    }
-  }, []);
-
-  const deselectAll = () => {
-    setCheckedList(wordList.map(() => false));
   };
 
-  const onSubmit = () => {
-    settingSubmit({
-      testMode: 2,
-      wordCount: null,
-      checkBoxValues: checkedList,
-    });
+  const DefaultTest = () => {
+    var test = wordList.map((value, index) => index);
+    changeTestList(test);
+    onStart();
   };
 
-  const updateCheckbox = (event: any) => {
-    var newList = checkedList.map((value, index) => {
-      if (index == event.currentTarget.value) {
-        return !value;
-      } else {
-        return value;
+  const RandomTest = () => {
+    var newTest = wordList.map((val, idx) => idx);
+    while (newTest.length != testOptions.wordCount) {
+      var randIdx = Math.floor(newTest.length * Math.random());
+      newTest.splice(randIdx, 1);
+    }
+    changeTestList(newTest);
+    onStart();
+  };
+
+  const PickTest = () => {
+    var list = testOptions.checkBoxValues ?? [];
+    var test: Array<number> = [];
+    list.forEach((val, idx) => {
+      if (val) {
+        test.push(idx);
       }
     });
-    settingUpdate();
-    setCheckedList(newList);
+    changeTestList(test);
+    onStart();
   };
+
   return (
-    <>
-      <PickWrapper>
-        {wordList.map((value, index) => (
-          <div key={`${index}`}>
-            <input
-              type="checkbox"
-              id={`${index}`}
-              value={index}
-              onChange={updateCheckbox}
-              checked={checkedList[index] ? true : false}
-            ></input>
-            <label htmlFor={`${index}`}>{value.word}</label>
-          </div>
-        ))}
-      </PickWrapper>
-      <button onClick={deselectAll}>Reset</button>
-      <button onClick={onSubmit}>Submit</button>
-    </>
+    <div>
+      <BtnPanel>
+        <ResetBtn onClick={onResetClicked}>Reset</ResetBtn>
+        <div />
+        <TestSettingBtn onClick={settingOpen}>Setting</TestSettingBtn>
+        <div />
+        <TestStartBtn onClick={onTestStartClicked}>Start</TestStartBtn>
+      </BtnPanel>
+      <SettingPanel visible={settingOpened}>
+        <div>Options{settingChanged ? "*" : ""}</div>
+        <Radio
+          wordOption={radioIndex}
+          onWordOptionChange={onWordOptionChange}
+        />
+        {radioIndex == 0 ? (
+          <Default settingSubmit={settingSubmit} />
+        ) : radioIndex == 1 ? (
+          <Random
+            settingUpdate={settingUpdate}
+            settingSubmit={settingSubmit}
+            testOptions={testOptions}
+          />
+        ) : (
+          <Pick
+            settingUpdate={settingUpdate}
+            settingSubmit={settingSubmit}
+            testOptions={testOptions}
+          />
+        )}
+      </SettingPanel>
+    </div>
   );
 }
 export default TestSetting;
