@@ -26,6 +26,12 @@ export const HomeBtn = styled(DefaultBtn)`
 `;
 
 export const ResetBtn = styled(DefaultBtn)`
+  text-align: center;
+  width: 100px;
+  height: 50px;
+`;
+
+export const TestSettingBtn = styled(DefaultBtn)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,13 +40,23 @@ export const ResetBtn = styled(DefaultBtn)`
 `;
 
 export const TestStartBtn = styled(DefaultBtn)`
-  width: 150px;
+  width: 100px;
   height: 50px;
 `;
 
 export const DetailsBtn = styled(DefaultBtn)`
   width: 50px;
   height: 50px;
+`;
+
+export const WrongRestartBtn = styled(DefaultBtn)<{ isDisabled: boolean }>`
+  font-size: 25px;
+  width: 150px;
+  height: 80px;
+  &:hover {
+    background-color: ${(props) => (props.isDisabled ? "#fff" : "#7fddff")};
+  }
+  transition: background-color 0.3s linear;
 `;
 
 export const RestartBtn = styled(DefaultBtn)`

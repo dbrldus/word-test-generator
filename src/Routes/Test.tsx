@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import HomeButton from "../Components/HomeButton";
 import { DataContext } from "../Data";
-import { Irow } from "../interface";
 
 const Wrapper = styled.div`
   font-family: "Do Hyeon", sans-serif;

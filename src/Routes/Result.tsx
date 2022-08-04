@@ -1,4 +1,4 @@
-import { useContext, useDebugValue, useState } from "react";
+import { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import {
   ResultTable,
   ResultTableWrapper,
   RestartBtn,
+  WrongRestartBtn,
 } from "../Components/StyledCOMP";
 import { DataContext } from "../Data";
 
@@ -20,8 +21,13 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-const Title = styled.div`
-  font-size: 100px;
+const Title = styled.h1`
+  width: 100vw;
+  padding: 10px 0px 10px 0px;
+  margin-top: 0px;
+  text-align: center;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 10px -10px black;
 `;
 
 const AnswerStatus = styled.div`
@@ -49,10 +55,9 @@ function Results() {
   const { wordList, testList, setTestList, resultData, setResultData } =
     useContext(DataContext);
 
-  let correctCount = wordList.length - resultData.length;
+  let correctCount = testList.length - resultData.length;
   let wrongCount = resultData.length;
   var wrongID = resultData.map((v) => v.id);
-  //console.log();
   const [showAll, setShowAll] = useState(false);
   const [restartTest, setRestartTest] = useState(false);
 
@@ -86,8 +91,9 @@ function Results() {
           <Helmet>
             <title>💯 Test Result</title>
           </Helmet>
+
+          <Title>Result</Title>
           <Wrapper>
-            <Title>Result</Title>
             <AnswerStatus>
               Correct : {correctCount} Wrong : {wrongCount}
             </AnswerStatus>
@@ -156,10 +162,19 @@ function Results() {
             </div>
 
             <NewTestPanel>
-              <RestartBtn onClick={wrongRestart}>
-                오답만
-                <br /> 재시험
-              </RestartBtn>
+              <WrongRestartBtn
+                onClick={wrongRestart}
+                disabled={wrongCount == 0}
+                isDisabled={wrongCount == 0}
+              >
+                {wrongCount == 0 ? (
+                  <div>-</div>
+                ) : (
+                  <div>
+                    오답만 <br /> 재시험
+                  </div>
+                )}
+              </WrongRestartBtn>
               <div />
               <RestartBtn onClick={thisTestRestart}>
                 이번 세트

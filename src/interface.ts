@@ -14,11 +14,6 @@ export interface Irow {
   meaning: Array<string>;
 }
 
-export interface IRouter {
-  wordList: Array<Irow>;
-  setWordList: Function;
-}
-
 export interface IwrongAnswer {
   id: number;
   answerInput: string;
@@ -26,4 +21,10 @@ export interface IwrongAnswer {
 
 export interface IResults {
   resultData: Array<IwrongAnswer>;
+}
+
+export interface Ioptions {
+  testMode: number; // 0 : default, 1 : random, 2 : pick
+  wordCount: number | null; //for random
+  checkBoxValues: Array<boolean> | null; //for pick
 }
