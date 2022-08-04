@@ -9,6 +9,7 @@ import {
   ResultTableWrapper,
   RestartBtn,
   WrongRestartBtn,
+  Title,
 } from "../Components/StyledCOMP";
 import { DataContext } from "../Data";
 
@@ -19,15 +20,6 @@ const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-`;
-
-const Title = styled.h1`
-  width: 100vw;
-  padding: 10px 0px 10px 0px;
-  margin-top: 0px;
-  text-align: center;
-  margin-bottom: 40px;
-  box-shadow: 0 5px 10px -10px black;
 `;
 
 const AnswerStatus = styled.div`

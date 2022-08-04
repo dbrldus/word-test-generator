@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { DataContext } from "../../Data";
 import { IOptionWindow } from "../../interface";
+import { OptionsBtn } from "../StyledCOMP";
 
 const PickWrapper = styled.div`
   display: grid;
@@ -27,7 +28,7 @@ const PickWrapper = styled.div`
   }
 `;
 
-function Pick({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
+function Custom({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
   const { wordList } = useContext(DataContext);
   const [checkedList, setCheckedList] = useState<Array<boolean>>([]);
 
@@ -44,11 +45,16 @@ function Pick({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
   };
 
   const onSubmit = () => {
-    settingSubmit({
-      testMode: 2,
-      wordCount: null,
-      checkBoxValues: checkedList,
-    });
+    var trueCount = checkedList.filter((value) => value).length;
+    if (trueCount == 0) {
+      alert("At least one thing should be checked");
+    } else {
+      settingSubmit({
+        testMode: 2,
+        wordCount: null,
+        checkBoxValues: checkedList,
+      });
+    }
   };
 
   const updateCheckbox = (event: any) => {
@@ -78,10 +84,10 @@ function Pick({ settingUpdate, settingSubmit, testOptions }: IOptionWindow) {
           </div>
         ))}
       </PickWrapper>
-      <button onClick={deselectAll}>Reset</button>
-      <button onClick={onSubmit}>Submit</button>
+      <OptionsBtn onClick={deselectAll}>Reset</OptionsBtn>
+      <OptionsBtn onClick={onSubmit}>Submit</OptionsBtn>
     </>
   );
 }
 
-export default Pick;
+export default Custom;

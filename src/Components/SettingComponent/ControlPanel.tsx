@@ -4,7 +4,7 @@ import { DataContext } from "../../Data";
 import { Ioptions } from "../../interface";
 import { ResetBtn, TestSettingBtn, TestStartBtn } from "../StyledCOMP";
 import Default from "./Default";
-import Pick from "./Pick";
+import Custom from "./Custom";
 import Radio from "./Radio";
 import Random from "./Random";
 
@@ -12,6 +12,10 @@ interface IcontrolPanel {
   changeTestList: Function;
   onStart: Function;
 }
+
+const OptionTitle = styled.div`
+  font-size: 30px;
+`;
 
 const BtnPanel = styled.div`
   margin-top: 30px;
@@ -21,9 +25,9 @@ const BtnPanel = styled.div`
 `;
 
 const SettingPanel = styled.div<{ visible: boolean }>`
+  margin-top: 10px;
   opacity: ${(props) => (props.visible ? "1" : "0")};
-  height: ${(props) => (props.visible ? "400px" : "0")};
-  transition: opacity 0.5s linear, height 0.5s linear;
+  transition: opacity 0.3s ease-in-out;
   width: inherit;
   background-color: #eee;
 `;
@@ -110,7 +114,7 @@ function ControlPanel({ changeTestList, onStart }: IcontrolPanel) {
         <TestStartBtn onClick={onTestStartClicked}>Start</TestStartBtn>
       </BtnPanel>
       <SettingPanel visible={settingOpened}>
-        <div>Options{settingChanged ? "*" : ""}</div>
+        <OptionTitle>Options{settingChanged ? "*" : ""}</OptionTitle>
         <Radio
           wordOption={radioIndex}
           onWordOptionChange={onWordOptionChange}
@@ -124,7 +128,7 @@ function ControlPanel({ changeTestList, onStart }: IcontrolPanel) {
             testOptions={testOptions}
           />
         ) : (
-          <Pick
+          <Custom
             settingUpdate={settingUpdate}
             settingSubmit={settingSubmit}
             testOptions={testOptions}

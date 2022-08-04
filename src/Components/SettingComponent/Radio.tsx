@@ -51,13 +51,13 @@ function Radio({ wordOption, onWordOptionChange }: IRadio) {
       </RadioLabel>
       <input
         type="radio"
-        id="Pick"
+        id="Custom"
         name="wordOption"
         value={2}
         onChange={onWordOptionChange}
       />
-      <RadioLabel htmlFor="Pick" selected={wordOption == 2}>
-        Pick
+      <RadioLabel htmlFor="Custom" selected={wordOption == 2}>
+        Custom
       </RadioLabel>
       <div />
     </RadioInput>

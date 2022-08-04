@@ -5,7 +5,7 @@ import readXlsxFile from "read-excel-file";
 import styled from "styled-components";
 import ControlPanel from "../Components/SettingComponent/ControlPanel";
 import File from "../Components/SettingComponent/File";
-import { WordTable, WordTableWrapper } from "../Components/StyledCOMP";
+import { Title, WordTable, WordTableWrapper } from "../Components/StyledCOMP";
 import { DataContext } from "../Data";
 import { Irow } from "../interface";
 
@@ -16,13 +16,10 @@ const Wrapper = styled.div`
   width: 700px;
 `;
 
-const Title = styled.h1`
-  width: 100vw;
-  padding: 10px 0px 10px 0px;
-  margin-top: 0px;
-  text-align: center;
-  margin-bottom: 40px;
-  box-shadow: 0 5px 10px -10px black;
+const FileInfo = styled.div`
+  width: inherit;
+  font-size: 30px;
+  text-align: left;
 `;
 
 function TestSetting() {
@@ -90,9 +87,9 @@ function TestSetting() {
                 </tbody>
               </WordTable>
             </WordTableWrapper>
-            <div>
-              WordList Length : {wordList.length != 0 ? wordList.length : ""}
-            </div>
+            <FileInfo>
+              Total : {wordList.length != 0 ? wordList.length : ""}
+            </FileInfo>
             {wordList.length != 0 ? (
               <ControlPanel changeTestList={changeTestList} onStart={onStart} />
             ) : (
